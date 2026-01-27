@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if form.instance.pk %}Edit Budget{% else %}Create Budget{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h3 class="mb-0 text-center">
+                        {% if form.instance.pk %}
+                            <i class="fas fa-edit me-2"></i>Edit Budget
+                        {% else %}
+                            <i class="fas fa-plus-circle me-2"></i>Create New Budget
+                        {% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" name="title" class="form-control" id="title" 
+                                   value="{% if form.title.value %}{{ form.title.value }}{% endif %}" 
+                                   placeholder="Enter budget title" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Budget Amount</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" name="amount" class="form-control" id="amount" 
+                                       value="{% if form.amount.value %}{{ form.amount.value }}{% endif %}" 
+                                       placeholder="Enter budget amount" step="0.01" min="0.01" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="note" class="form-label">Notes (Optional)</label>
+                            <textarea name="note" class="form-control" id="note" rows="3" 
+                                      placeholder="Optional notes about this budget...">{% if form.note.value %}{{ form.note.value }}{% endif %}</textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{% if form.instance.pk %}{% url 'budget_detail' form.instance.pk %}{% else %}{% url 'budget_list' %}{% endif %}" 
+                               class="btn btn-outline-secondary me-md-2">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                {% if form.instance.pk %}
+                                    <i class="fas fa-save me-2"></i>Update Budget
+                                {% else %}
+                                    <i class="fas fa-check me-2"></i>Create Budget
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            {% if form.instance.pk %}
+            <div class="card mt-3">
+                <div class="card-body text-center">
+                    <a href="{% url 'budget_delete' form.instance.pk %}" class="btn btn-outline-danger">
+                        <i class="fas fa-trash me-2"></i>Delete This Budget
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-focus on the first field
+        const firstField = document.getElementById('title');
+        if (firstField) {
+            firstField.focus();
+        }
+    });
+</script>
+{% endblock %}

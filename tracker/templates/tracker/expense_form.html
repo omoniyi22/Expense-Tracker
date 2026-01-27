@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Expense{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h3 class="mb-0 text-center">
+                        <i class="fas fa-edit me-2"></i>Edit Expense
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Expense Description</label>
+                            <input type="text" name="title" class="form-control" id="title" 
+                                   value="{{ expense.title }}" 
+                                   placeholder="Enter expense description" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Amount</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" name="amount" class="form-control" id="amount" 
+                                       value="{{ expense.amount|floatformat:2 }}" 
+                                       placeholder="Enter amount" step="0.01" min="0.01" required>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            This expense belongs to: <strong>{{ expense.budget.title }}</strong>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{% url 'budget_detail' expense.budget.pk %}" 
+                               class="btn btn-outline-secondary me-md-2">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Update Expense
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
